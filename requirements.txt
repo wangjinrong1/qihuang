@@ -1,0 +1,14 @@
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+pillow>=10.0
+
+# 药方图片文字识别（OCR，可选；不装则只能粘贴文字）
+rapidocr-onnxruntime>=1.3
+
+# ---- 以下为接入真实模型时才需要（默认演示模式不需要）----
+# torch>=2.1
+# torchvision>=0.16
+# transformers>=4.40
+# peft>=0.10
+# accelerate>=0.28

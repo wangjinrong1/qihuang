@@ -1,0 +1,8 @@
+# 接入本地中医大模型所需（先装好 requirements.txt）
+# CPU：直接安装即可（Windows 默认装的是 CPU 版 torch）
+# NVIDIA 显卡：请先到 https://pytorch.org 按你的 CUDA 版本装对应的 torch，再装下面其余的包
+torch
+transformers>=4.40
+peft>=0.10
+accelerate>=0.28
+huggingface_hub

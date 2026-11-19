@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+tree.py
+structure.txt
+
+models/*
+!models/.gitkeep
+uploads/*
+!uploads/.gitkeep
+tongue_coating_classify/dataset/

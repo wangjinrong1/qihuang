@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>岐黄智诊 · 中医智能辅助平台</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<aside class="side">
+  <div class="brand"><span class="seal">岐</span><div><strong>岐黄智诊</strong><small>TCM AI ASSISTANT</small></div></div>
+  <nav id="nav">
+    <button data-tab="chat" class="on"><i>问</i>智能问诊</button>
+    <button data-tab="consult"><i>诊</i>辨证报告</button>
+    <button data-tab="rx"><i>方</i>药方识别</button>
+    <button data-tab="herb"><i>药</i>中药识别</button>
+    <button data-tab="atlas"><i>穴</i>经络图谱</button>
+    <button data-tab="kb"><i>典</i>知识库</button>
+  </nav>
+  <div class="status" id="status" style="cursor:pointer" title="点击切换模型"><span class="dot"></span><span id="statusText">连接中…</span></div>
+  <p class="disclaimer">内容仅供学习与辅助参考，<br>不构成医疗建议。</p>
+</aside>
+
+<main>
+  <!-- 智能问诊 -->
+  <section id="tab-chat" class="tab on">
+    <header class="tab-head"><h1>智能问诊</h1><p>像门诊一样多轮询问病情，信息够了再给辨证与调护建议</p>
+      <button class="ghost chip" id="modelChip" title="点击切换模型">模型：…</button>
+      <label class="web-toggle" id="webLabel"><input type="checkbox" id="webToggle"> 联网检索</label>
+      <button class="ghost" id="chatClear">清空对话</button></header>
+    <div class="chat-box" id="chatBox">
+      <div class="hello">
+        <div class="seal big">岐</div>
+        <h2>请描述您的症状或想了解的中医问题</h2>
+        <div class="quick">
+          <button>感冒了，咳嗽，喉咙痛</button>
+          <button>咳嗽、咳白痰、咽痒，舌淡红，纳差，怎么辨证？</button>
+          <button>苔厚腻一般提示什么？</button>
+          <button>什么是十八反？</button>
+        </div>
+      </div>
+    </div>
+    <div class="progress" id="chatProgress" hidden>
+      <span class="progress-text" id="chatProgressText"></span>
+      <button class="ghost" id="chatConclude" type="button">信息够了，直接给建议</button>
+    </div>
+    <div class="composer">
+      <textarea id="chatInput" rows="2" placeholder="输入问题，Enter 发送，Shift+Enter 换行"></textarea>
+      <button id="chatSend" class="primary">发送</button>
+    </div>
+  </section>
+
+  <!-- 辨证报告 -->
+  <section id="tab-consult" class="tab">
+    <header class="tab-head"><h1>辨证报告</h1><p>患者信息 → 舌象 → 图谱辨证 → 方药与调护 → 报告</p></header>
+    <div class="consult-grid">
+      <form id="consultForm" class="card form">
+        <h3>患者信息</h3>
+        <div class="row3">
+          <label>姓名<input name="name" placeholder="可选"></label>
+          <label>性别<select name="gender"><option value="">未填</option><option>男</option><option>女</option></select></label>
+          <label>年龄<input name="age" type="number" min="0" max="120"></label>
+        </div>
+        <label>主诉与症状 <em>*</em><textarea name="complaint" rows="5" required placeholder="例：咳嗽、咳白痰、咽痒，纳差，舌淡红，右脉沉，左脉细涩"></textarea></label>
+        <label>病程<input name="duration" placeholder="例：两周"></label>
+        <label>既往史 / 过敏史<input name="history" placeholder="可选"></label>
+        <label>舌象照片（可选）
+          <div class="drop" id="drop"><input type="file" name="image" id="imgInput" accept="image/*"><span id="dropText">点击或拖入舌象图片</span><img id="imgPrev" hidden></div>
+        </label>
+        <button class="primary wide" id="consultGo" type="submit">开始辨证</button>
+      </form>
+
+      <div class="result" id="result">
+        <div class="empty card"><div class="seal big">诊</div><p>填写左侧信息后，这里会依次显示<br>舌象 · 证型 · 方药 · 分析 · 报告</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 药方识别 -->
+  <section id="tab-rx" class="tab">
+    <header class="tab-head"><h1>药方识别</h1><p>粘贴文字或上传药方照片，自动提取药材与剂量，检查配伍禁忌并解读</p></header>
+    <div class="consult-grid">
+      <form id="rxForm" class="card form">
+        <h3>药方内容</h3>
+        <label>药方文字<textarea name="text" id="rxText" rows="8" placeholder="例：柴胡12g 黄芩9g 姜半夏9g 党参10g 炙甘草6g 生姜3片 大枣4枚"></textarea></label>
+        <label>或上传药方图片（自动识别文字）
+          <div class="drop"><input type="file" id="rxImg" accept="image/*"><span id="rxDropText">点击或拖入处方照片</span><img id="rxPrev" hidden></div>
+        </label>
+        <button class="primary wide" id="rxGo" type="submit">识别药方</button>
+        <button class="ghost wide" type="button" id="rxDemo" style="margin-top:8px">填入示例药方</button>
+      </form>
+      <div class="result" id="rxResult"><div class="empty card"><div class="seal big">方</div><p>识别后依次显示<br>药材清单 · 配伍禁忌 · 相近方剂 · 解读</p></div></div>
+    </div>
+  </section>
+
+  <!-- 中药识别 -->
+  <section id="tab-herb" class="tab">
+    <header class="tab-head"><h1>中药识别</h1><p>上传药材图片识别品种，或按名称查询性味归经、所在方剂与禁忌</p></header>
+    <div class="consult-grid">
+      <div class="card form">
+        <h3>图片识别</h3>
+        <div class="drop"><input type="file" id="herbImg" accept="image/*"><span id="herbDropText">点击或拖入药材图片</span><img id="herbPrev" hidden></div>
+        <button class="primary wide" id="herbGo" style="margin-top:14px">识别药材</button>
+        <h3 style="margin-top:22px">名称查询</h3>
+        <input id="herbQ" placeholder="输入药名，如：黄" autocomplete="off">
+        <div class="chips" id="herbSug" style="margin-top:8px"></div>
+      </div>
+      <div class="result" id="herbResult"><div class="empty card"><div class="seal big">药</div><p>识别或查询后在这里显示<br>性味 · 归经 · 所在方剂 · 配伍禁忌</p></div></div>
+    </div>
+  </section>
+
+  <!-- 经络图谱 -->
+  <section id="tab-atlas" class="tab tab-full">
+    <iframe id="atlasFrame" title="经络图谱" data-src="/atlas/"></iframe>
+  </section>
+
+  <!-- 知识库 -->
+  <section id="tab-kb" class="tab">
+    <header class="tab-head"><h1>知识库</h1><p id="kbStats"></p></header>
+    <div class="kb-bar"><input id="kbSearch" placeholder="搜索证型、方剂、药材…">
+      <div class="seg" id="kbSeg"><button class="on" data-k="syn">证型</button><button data-k="frm">方剂</button><button data-k="book">古籍资料</button></div></div>
+    <div id="kbList" class="kb-list"></div>
+  </section>
+</main>
+
+<dialog id="modelDlg">
+  <form method="dialog" id="modelForm" class="model-form">
+    <h3>切换模型</h3>
+    <label class="opt"><input type="radio" name="mode" value="api"> <b>云端 API</b>（DeepSeek 等，回答质量高，需要 API Key）</label>
+    <div class="sub" id="apiFields">
+      <label>模型
+        <select id="apiModelSel"><option value="deepseek-chat">deepseek-chat（通用，推荐）</option><option value="deepseek-reasoner">deepseek-reasoner（深度思考，更慢）</option><option value="__custom">自定义…</option></select>
+        <input id="apiModelCustom" placeholder="模型名，如 qwen-plus" hidden>
+      </label>
+      <label>API Key <input id="apiKey" type="password" autocomplete="off" placeholder="sk-…"></label>
+      <label>接口地址 <input id="apiBase" placeholder="https://api.deepseek.com"></label>
+      <p class="hint">Key 只保存在服务运行的内存里，不会写入磁盘，重启后失效；想长期使用请写进 <code>.env</code> 的 <code>LLM_API_KEY</code>。问诊内容会发送给该服务商，请勿填写真实姓名等隐私信息。</p>
+    </div>
+    <label class="opt"><input type="radio" name="mode" value="local"> <b>本地中医模型</b>（数据不出本机，需已配置适配器，加载较慢）</label>
+    <p class="hint sub" id="localHint"></p>
+    <label class="opt"><input type="radio" name="mode" value="mock"> <b>演示模式</b>（不调用任何模型，只看流程）</label>
+    <p class="err" id="modelErr" hidden></p>
+    <menu><button type="button" class="ghost" id="modelCancel">取消</button><button type="submit" class="primary" id="modelOk">测试并切换</button></menu>
+  </form>
+</dialog>
+<script src="/static/app.js"></script>
+<script src="/static/herb.js"></script>
+</body>
+</html>

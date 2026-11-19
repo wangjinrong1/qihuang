@@ -1,0 +1,13 @@
+##环境配置
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+##pytorch安装
+ pip install torch==2.14.1 torchvision==0.29.1 --index-url https://download.pytorch.org/whl/cu132
+##大模型配置
+python -m pip install -r requirements-llm.txt
+ python scripts/download_model.py --adapter CMLM/ZhongJing-2-1_8b --mirror
+
+#自检启动
+python check_llm.py
+python run.py
